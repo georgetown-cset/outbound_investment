@@ -324,7 +324,6 @@ investment_type,
   target_name,
   year,
   imputed_investment_value,
-  investor_country,
   target_country
 order by 
 target_name
