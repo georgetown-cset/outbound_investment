@@ -1,0 +1,35 @@
+
+WITH
+  a AS (
+  SELECT
+    *
+  FROM
+    `gcp-cset-projects.nl522_sandbox.usa-chn-intermediate`),
+  b AS (
+  SELECT
+    *
+  FROM
+    `gcp-cset-projects.nl522_sandbox.usa-chn-intermediate`)
+SELECT
+  a.investment_type,
+  a.target_name,
+  a.investor_names AS usa_investor_names,
+  b.investor_names AS chn_investor_names,
+  a.year,
+  a.imputed_investment_value,
+  b.imputed_investment_value,
+  a.investor_country AS usa_investor,
+  b.investor_country AS chn_investor,
+  a.target_country
+FROM
+  a
+LEFT JOIN
+  b
+ON
+  a.investment_type = b.investment_type
+  AND a.target_name = b.target_name
+  AND a.year = b.year
+  AND a.imputed_investment_value =  b.imputed_investment_value
+WHERE
+  a.investor_country = "USA"
+  AND b.investor_country = "CHN"
