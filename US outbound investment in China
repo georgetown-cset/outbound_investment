@@ -256,7 +256,7 @@ WITH
         0.5) OVER() AS imputed_investment_value_step
     FROM
       imp_step5 ) ),
-  #make QUAD AI table
+  #make outbound_ai AI table
   outbound_ai AS (
   SELECT
   DISTINCT
