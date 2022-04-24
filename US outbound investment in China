@@ -3,9 +3,9 @@ WITH
   # table with basic company information
   comp_stage AS (
   SELECT
-    * EXCEPT(short_description,
+   * EXCEPT(short_description,
       description),
-    CONCAT(short_description,' ', description) AS description
+    CONCAT(coalesce(short_description, ''),' ', coalesce(description, '')) AS description
   FROM (
     SELECT
       uuid,
@@ -55,10 +55,6 @@ WITH
     (category_groups_list LIKE '%Artificial Intelligence%',
       TRUE,
       FALSE) AS ai_category_cb,
-  IF
-    (CSET_id IS NOT NULL,
-      TRUE,
-      FALSE) AS cset_ai_org
   FROM
     comp
   LEFT JOIN (
@@ -172,7 +168,6 @@ WITH
       0) AS ipo,
     IFNULL(ai_company,
       FALSE) AS ai_company,
-    cset_ai_org,
     ai_category_cb,
     IFNULL(investor_country,
       'missing') AS investor_country,
@@ -256,7 +251,7 @@ WITH
         0.5) OVER() AS imputed_investment_value_step
     FROM
       imp_step5 ) ),
-  #make outbound_ai AI table
+  #make QUAD AI table
   outbound_ai AS (
   SELECT
   DISTINCT
@@ -264,10 +259,9 @@ WITH
   FROM
     imp_step6
   WHERE
-    (cset_ai_org IS TRUE
+    (ai_company IS TRUE
       OR ai_category_cb IS TRUE)
     AND (target_country = "CHN" or target_country = "HKG")
-    AND (investor_country = "CHN" or investor_country = "HKG" or investor_country = "USA")
     AND (year >= 2015)
     AND (year <= 2021)
     AND ( investment_type != "missing"
@@ -322,10 +316,10 @@ FROM
   where investor_country is not null
 group by 
 investment_type,
+investor_country,
   target_name,
   year,
   imputed_investment_value,
-  investor_country,
   target_country
 order by 
 target_name
