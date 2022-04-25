@@ -3,9 +3,9 @@ WITH
   # table with basic company information
   comp_stage AS (
   SELECT
-    * EXCEPT(short_description,
+   * EXCEPT(short_description,
       description),
-    CONCAT(short_description,' ', description) AS description
+    CONCAT(coalesce(short_description, ''),' ', coalesce(description, '')) AS description
   FROM (
     SELECT
       uuid,
@@ -55,10 +55,6 @@ WITH
     (category_groups_list LIKE '%Artificial Intelligence%',
       TRUE,
       FALSE) AS ai_category_cb,
-  IF
-    (CSET_id IS NOT NULL,
-      TRUE,
-      FALSE) AS cset_ai_org
   FROM
     comp
   LEFT JOIN (
@@ -75,7 +71,7 @@ WITH
     target_uuid,
     investor_uuid,
     investor_name,
-    org_name AS target_name,
+    org_name as target_name,
     COUNT(investor_uuid) OVER(PARTITION BY funding_round) AS n_investors,
     raised_amount_usd AS investment_value,
     investment_type,
@@ -129,7 +125,7 @@ WITH
     SELECT
       acquiree_uuid AS target_uuid,
       acquirer_uuid AS investor_uuid,
-      acquirer_name AS investor_name,
+      acquirer_name as investor_name,
       acquiree_name AS target_name,
       1 AS n_investors,
       price_usd AS investment_value,
@@ -141,12 +137,11 @@ WITH
       acquirer_country_code AS investor_target_country
     FROM
       gcp_cset_crunchbase.acquisitions) ),
-  --    /* add ai companies to investments */
+  --    /* add ai companies to investments */ 
   add_ai_to_inv AS (
   SELECT
     * EXCEPT (target_name),
-    COALESCE (a.target_name,
-      b.target_name) AS target_name
+    COALESCE (a.target_name, b.target_name) as target_name
   FROM
     add_mergers a
   FULL JOIN
@@ -173,7 +168,6 @@ WITH
       0) AS ipo,
     IFNULL(ai_company,
       FALSE) AS ai_company,
-    cset_ai_org,
     ai_category_cb,
     IFNULL(investor_country,
       'missing') AS investor_country,
@@ -257,14 +251,15 @@ WITH
         0.5) OVER() AS imputed_investment_value_step
     FROM
       imp_step5 ) ),
-  #make outbound_ai table
+  #make outbound AI table
   outbound_ai AS (
   SELECT
-    DISTINCT *
+  DISTINCT
+    *
   FROM
     imp_step6
   WHERE
-    (cset_ai_org IS TRUE
+    (ai_company IS TRUE
       OR ai_category_cb IS TRUE)
     AND (year >= 2015)
     AND (year <= 2021)
