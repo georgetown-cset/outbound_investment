@@ -262,8 +262,7 @@ WITH
     (ai_company IS TRUE
       OR ai_category_cb IS TRUE)
     AND (target_country = "CHN" or target_country = "HKG") AND
-    (investor_country = "CHN" or investor_country ="HKG") 
-    AND (investor_country = "USA")
+    (investor_country = "CHN" or investor_country ="HKG" or investor_country = "USA") 
     AND (year >= 2015)
     AND (year <= 2021)
     AND ( investment_type != "missing"
