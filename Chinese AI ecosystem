@@ -148,7 +148,7 @@ WITH
     add_ipo_tab b
   ON
     a.target_uuid = b.uuid),
-  /* where ai_category_cb is True OR ai_company is True OR investment_from_ai_count > 0 OR investment_to_ai_count > 0*/ distinct_rounds AS (
+  /* where ai_category_cb is True OR ai_company is True */ distinct_rounds AS (
   SELECT
     DISTINCT target_uuid,
     funding_round,
