@@ -25,19 +25,6 @@ WITH
       gcp_cset_crunchbase.organization_descriptions)
   USING
     (uuid) ),
-  comp AS ( # add CSET AI orgs
-  SELECT
-    *
-  FROM
-    comp_stage
-  LEFT JOIN (
-    SELECT
-      CSET_id,
-      crunchbase.crunchbase_uuid AS uuid
-    FROM
-      high_resolution_entities.organizations )
-  USING
-    (uuid) ),
   add_ipo_tab AS (
   SELECT
     uuid,
@@ -56,7 +43,7 @@ WITH
       TRUE,
       FALSE) AS ai_category_cb,
   FROM
-    comp
+    comp_stage
   LEFT JOIN (
     SELECT
       1 AS ipo,
