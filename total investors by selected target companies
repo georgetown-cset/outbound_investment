@@ -285,13 +285,14 @@ FROM
   outbound_ai
 WHERE
   target_name = "Didi"
-  OR target_name = "ByteDance"
+  OR target_name = "Youibot"
   OR target_name = "Zuoyebang"
   OR target_name = "Talkpush"
   OR target_name = "Laiye"
   OR target_name = "Insilico Medicine"
   OR target_name = "Geek+"
   OR target_name = "Clobotics"
+  OR target_name = "Xpeng Motors"
 
 GROUP BY
   investment_type,
