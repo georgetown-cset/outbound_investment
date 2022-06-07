@@ -1,4 +1,4 @@
-select target_name, count(investor_name) from (#Venture capital investment
+select target_name, count(distinct investor_name) from (#Venture capital investment
 WITH
   # table with basic company information
   comp_stage AS (
