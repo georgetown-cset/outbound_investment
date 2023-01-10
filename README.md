@@ -1,0 +1,1 @@
+This report analyzes Crunchbase data from 2015-2021 on U.S. outbound investment into Chinese AI companies to more effectively understand the scope and nature of these transactions. It seeks to identify the main U.S. investors active in the Chinese AI ecosystem and the set of Chinese AI companies that have benefitted from U.S. capital. 
